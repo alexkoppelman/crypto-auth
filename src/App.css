@@ -9,13 +9,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.App {
-  text-align: center;
-  font-size: small;
-}
-
 body {
-  font-size: calc(9px);
+  font-size: 0.7rem;
 }
 
 h1 {
@@ -26,23 +21,57 @@ h2 {
   font-size: calc(7px + 2vmin);
 }
 
-.App-header {
+header {
   background-color: #282c34;
-  min-height: 100vh;
+  /* min-height: 10vh; */
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: right;
+  left:0;
+  padding: 0.5rem;
   justify-content: center;
-  font-size: calc(8px + 2vmin);
-  color: white;
+  font-size: calc(0.7rem);
+  color: white
 }
 
-.App-link {
-  color: #61dafb;
+.MetaMaskDIV {
+
+}
+
+.walletInfoDIV {
+  right: 0;
+  max-width: fit-content;
+}
+
+.mainpage{
+margin-left: 5px;
 }
 
 button {
   font-size: 1em;
+  margin: 0.5rem;
+}
+
+table {
+ border: 1px solid;
+ padding: 10px;
+ border-radius: 3%;
+ border-color: #282c34;
+ 
+ width: 100%
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {background-color: rgb(80, 205, 255);}
+
+.newUserForm {
+  border: 1px solid;
+  padding: 10px;
+  border-radius: 3%;
+  border-color: #282c34;
 }
 
 .bannedTR {

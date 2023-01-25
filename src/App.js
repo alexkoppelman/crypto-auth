@@ -7,6 +7,7 @@ const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 /*
 TODO:
+  - When not authenticated to MM show only button
   - Deletion and ban need confirmation
   - Some kind of security, or can any random create a link and delete/ban ppl?
   - Button to view all users when logged in is admin
@@ -157,6 +158,9 @@ async function DeleteUser(id) {
             <button className='MMconnectBUTTON' onClick={addEditDetails}>{showEditForm ? "Hide Form" : "Add / Edit User Details" }</button>
            
         <div className='MMErrorMsgDIV'>{errorMessage}</div>
+        </div>
+        <div className='walletInfoDIV'>
+          Wallet Balance: {userBalance} eth 
         </div>
 
       </header>
