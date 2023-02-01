@@ -1,8 +1,11 @@
-import React, { useState , useEffect} from 'react';
-import { ethers } from 'ethers';
-import axios from "axios";
-import './App.css';
+import React, { useState , useEffect} from 'react'
+import { ethers } from 'ethers'
+import axios from "axios"
+import './App.css'
+import './menu.css'
 
+import AllUsersComponent from './components/AllUsers'
+import UserDetails from './components/UserDetails'
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 /*
@@ -18,86 +21,44 @@ TODO:
 function App() {
 
   // NODE-RED HTTP ENDPOINTS:
-  const GETUserUrl = 'https://192.168.1.100:1880/userfromAddress/'
-  const PUTUserUrl = 'https://192.168.1.100:1880/userPUTAddress/'
-  const DELETEUserUrl = 'https://192.168.1.100:1880/userDelete/'
-  const GETAllUserUrl = 'https://192.168.1.100:1880/userGETall/'
-  const BanUserURL = 'https://192.168.1.100:1880/userBanPUT/'
+  /* const GETUserUrl = 'https://192.168.1.100:1880/userfromAddress/' */
+  
+  function burgerMenu(){
+    return(
+
+
+
+<div class="hamburger-menu">
+    <input id="menu__toggle" type="checkbox" />
+    <label class="menu__btn" for="menu__toggle">
+      <span></span>
+    </label>
+    <ul class="menu__box">
+      <li><a class="menu__item" href="#" onClick={connectwalletHandler}>{defaultAccount ? shortAddress : "Connect"}</a></li>
+      <li><a class="menu__item" href="#" onClick={addEditDetails}>{showEditForm ? "Hide Form" : "Add / Edit User Details" }</a></li>
+      <li><a class="menu__item" href="#">Team</a></li>
+      <li><a class="menu__item" href="#">Contact</a></li>
+      <li><a class="menu__item" href="https://twitter.com/alexkbcn" target='_blank' alt='twitter'>Twitter</a></li>
+    </ul>
+  </div>
+
+    )
+  }
 
   // METAMASK STATES 
   const [errorMessage, setErrorMessage] = useState(null)
   const [defaultAccount, setDefaultAccount] = useState(null)
   const [userBalance, setUserBalance] = useState(null)
-  // FULL USER DATASET
-  const [allUserData, setAllUserData] = useState([])
-
-  // DATAVASE REPONSE STATE
+  const [userAvatar, setUserAvatar] = useState(null)
+  // DATABASE REPONSE STATE
   const [dbReply, setDbReply] = useState([])
 
-  // CURRENT USERDATA STATE
-  const [user, setUser] = useState({    
-      firstName: '',
-      lastName: '',
-      email: '',
-      userName: '',
-      ethAddress: ''    
-  })
-  // FORM STATES
-  const [ShowUserStats, setShowUserStats] = useState(false)
-  const [showEditForm, setShowEditForm] = useState(false)
+  const [ShowUserStats, setShowUserStats] = useState(true)
 
+  const [showEditForm, setShowEditForm] = useState(false)
   function addEditDetails() {
     setShowEditForm(prevState => !prevState)
   }
-
-  // GET User Details
-  function getUserData(account) {
-    axios.get(GETUserUrl + account).then((response) => {
-      const replyData = response.data[0]
-      if(replyData === undefined) {
-        setUser({    
-          firstName: '',
-          lastName: '',
-          email: '',
-          userName: '',
-          ethAddress: account   
-      }
-        ) 
-        console.log(user) 
-        return
-      }
-      setUser(replyData)
-      setShowUserStats(true)
-      })
-    
-  }
-  
-// GET All Users 
-useEffect(() => {
-  axios.get(GETAllUserUrl)
-      .then((response) => {
-        setAllUserData(response.data);
-      })
-}, [dbReply])
-
-// BAN USER
-async function BanUser(id, banstat) {
-  if(banstat === 'ban' ? banstat = 'Banned' : 'NotBanned')
-  await axios.put(BanUserURL, 
-     {
-      id: id,
-      banstat: banstat
-    } )
-      .then((response) => {
-        setDbReply(response.data)
-      })}
-
-// DELETE USER
-async function DeleteUser(id) {
-  await axios.delete(DELETEUserUrl + id)
-      .then((response) => {
-        setDbReply(response.data)
-})}
 
 //METAMASK CONNECTION
   const connectwalletHandler = () => {
@@ -119,124 +80,61 @@ async function DeleteUser(id) {
       await getuserBalance(address)
       // checking for user data in DB
       console.log("MM LOGGED IN: " + address)
-      getUserData(address)
+      // getUserData(address)
+      setUserAvatar('https://robohash.org/'+ address)
 
   }
   const getuserBalance = async (address) => {
       const balance = await provider.getBalance(address, "latest")
+      
       }
 
   // SHORTEN ETH ADDRESS FOR BUTTONText
   let shortEth = defaultAccount ? defaultAccount.slice(0, 5).concat( "...", defaultAccount.slice(-4)) : ''
+  
   const shortAddress =  defaultAccount ? shortEth : "Connect" 
-
-  // CHANGES TO FORM UPDATE USER STATE
-  const handleChange = (event) => {
-    setUser({
-      ...user,
-      [event.target.id]: event.target.value,
-    });
-  };
-
-  // PUT WHEN FORM SUBMITTED - ()
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios.put(PUTUserUrl, user).then((response) => {
-      const replyData = response.data[0]
-      setDbReply(response.data)
-      })
-     .catch(error => console.error('error: ${error}'))
-  };
-
+  const shortBalance = userBalance ? userBalance.slice(0,6) : 'Please connect your wallet'
 
   return (
-    
+    <div>
     <main>
       <header>
       <div className="MetaMaskDIV">
-            <button className='MMconnectBUTTON' onClick={connectwalletHandler}> {defaultAccount ? shortAddress : "Connect"} </button>
-            <button className='MMconnectBUTTON' onClick={addEditDetails}>{showEditForm ? "Hide Form" : "Add / Edit User Details" }</button>
-           
+      {/* {defaultAccount &&
+        <button className='MMconnectBUTTON' onClick={addEditDetails}>{showEditForm ? "Hide Form" : "Add / Edit User Details" }</button>
+      } */}
         <div className='MMErrorMsgDIV'>{errorMessage}</div>
-        </div>
-        <div className='walletInfoDIV'>
-          Wallet Balance: {userBalance} eth 
-        </div>
+
+      </div>
+      <div className='walletInfoDIV'>{burgerMenu()} {defaultAccount ? <span className='header--mm--username'><img src={userAvatar} alt="" width="25"/> <span className='header--username'>{shortAddress}</span></span>: ''}
+      {defaultAccount ? <div className='header--balance'>Wallet Balance: {shortBalance} eth</div> : ''}
+          
+          {/* <p className='header--balance'>Wallet Balance: {shortBalance} eth</p> */}
+       
+        {/*   <p><button className='MMconnectBUTTON' onClick={connectwalletHandler}> {defaultAccount ? shortAddress : "Connect"} </button></p>  */}
+        
+        
+      </div>
 
       </header>
 
       <div className='mainpage'>
-       
-        <div className="userDetails" style={{ display: (ShowUserStats ? 'block' : 'none') }}>
-        <h4 className="walletAddress">Address:{defaultAccount}</h4>
-            <h4 className="walletAddress">Wallet Amount: {userBalance}</h4>
-            <ul>
-            <li>Username: {user ? user.userName : ''} ({user ? user.email : ''})</li>
-            <li>First Name: {user ? user.firstName : ''}</li>
-            <li>Last Name: {user ? user.lastName : ''}</li>
-            <li>Address: {defaultAccount} ({Math.round(userBalance)})</li>
-            </ul>
-            </div>
+    
 
-        <div className='newUserForm' style={{ display: (showEditForm ? 'block' : 'none') }}>
-        <form>
-          <h1>{user ? 'Update' : 'Add'} User Details</h1>
-          <fieldset>
-            <label><p>Preferred UserName</p>
-              <input id='userName' name="userName" value={user && user.userName} onChange={handleChange} /> </label>
-            <label><p>First Name</p>
-              <input id='firstName' name="firstName" value={user && user.firstName } onChange={handleChange}/> </label>
-            <label><p>Last Name</p>
-              <input id='lastName' name="lastName" value={user && user.lastName } onChange={handleChange}/> </label> 
-            <label><p>email</p>
-              <input id='email' name="email" value={user && user.email } onChange={handleChange}/> </label><br/><br/>  
-            
-            <button onClick={handleSubmit}>Update Post</button>
-          </fieldset>
-          </form>
- 
-        </div>
+      <UserDetails
+        defaultAccount = {defaultAccount}
+        userBalance = {userBalance}
+        ShowUserStats = {ShowUserStats}
+      /> 
 
-        <div className='allUsersTableDiv'>
 
-        </div>
-          <div className='AllUsersTableTable' >
-            All {allUserData.length} Users:<br/> {allUserData.Role}
-            <table>
-              <thead>
-                <tr>
-                <th>user ID</th>
-                <th>firstname</th>
-                <th>lastname</th>
-                <th>username</th>
-                <th>email</th>
-                <th>Address</th>
-                <th>Status</th>
-                <th>Role</th>
-                <th>Action:Ban</th>
-                <th>Action:Delete</th>
-                </tr></thead>
-              <tbody>
-  {allUserData.map((data) => {
-     return (
-       <tr key={data.idUsers} className={data.Status === 'Banned' ? 'bannedTR' : 'notbannedTR' }>
-          <td>{data.idUsers}</td>
-          <td>{data.firstName}</td>
-          <td>{data.lastName}</td>
-          <td>{data.userName}</td>
-          <td>{data.email}</td>
-          <td>{data.ethAddress}</td>
-          <td>{data.Status}</td>
-          <td>{data.Role} </td>
-          <td onClick={() => {data.Status === 'Banned' ?  BanUser(data.idUsers, 'unban') :  BanUser(data.idUsers,'ban')}}>{data.Status === 'Banned' ? 'unban' : 'ban'} User {data.userName}</td>
-          <td onClick={() => {DeleteUser(data.idUsers)}}>Delete User {data.userName}</td>
-          </tr>
-   )})}</tbody>
-   </table>
-    Database response: {dbReply.data && dbReply.message}
+    
           </div>
-      </div>
     </main>
+    <footer>
+Database response: {dbReply.data && dbReply.message}
+    </footer>
+</div>
   );
 }
 

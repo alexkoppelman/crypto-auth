@@ -7,10 +7,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
+  
   font-size: 0.7rem;
+  width: 100%;
 }
 
 h1 {
@@ -23,33 +22,70 @@ h2 {
 
 header {
   background-color: #282c34;
-  /* min-height: 10vh; */
-  display: flex;
-  flex-direction: row;
-  align-items: right;
-  left:0;
-  padding: 0.5rem;
-  justify-content: center;
+  padding: 0px;
   font-size: calc(0.7rem);
-  color: white
+  color: white;
+  /* position: relative; */
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .MetaMaskDIV {
-
+  
+  align-items: right;
 }
 
 .walletInfoDIV {
-  right: 0;
-  max-width: fit-content;
+  position:fixed;
+  right: 60px;
+  top: -15px;
+  width:fit-content;
+  /* max-width: 800px; */
+  justify-content: right;
 }
+
+.header--mm--username{
+
+}
+
+.header--username {
+ line-height: 75%;
+ font-weight: bold;
+ font-size: 1rem;
+}
+
+.header--balance {
+  position: fixed;
+  line-height: 75%;
+  top:40px;
+  right: 10px;
+}
+
 
 .mainpage{
 margin-left: 5px;
 }
 
 button {
-  font-size: 1em;
-  margin: 0.5rem;
+ 
+  font-size:0.7rem;
+  font-family:Arial;
+  width:4rem;
+  height:1.5rem;
+  border-width:1px;
+  color:#fff;
+  border-color:#314179;
+  border-radius: 4px;
+  font-weight:bold;
+  
+  box-shadow:inset 0px 1px 0px 0px #7a8eb9;
+  background:linear-gradient(#637aad, #5972a7);
+}
+
+button:hover {
+  background: linear-gradient(#5972a7, #637aad);
 }
 
 table {
@@ -77,6 +113,4 @@ tr:hover {background-color: rgb(80, 205, 255);}
 .bannedTR {
   background-color: red;
 }
-.notbannedTR {
 
-}
